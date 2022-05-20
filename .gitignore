@@ -1,0 +1,69 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+#logs
+*.log
+
+# compiled output
+/dist
+tmp/
+cache/
+.cache/
+
+# dependencies
+node_modules
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+*.launch
+.settings/
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage/*
+/libpeerconnection.log
+npm-debug.log
+testem.log
+/typings
+
+# e2e
+/e2e/*.js
+/e2e/*.map
+
+#System Files
+.DS_Store
+Thumbs.db
+
+#visual studio history
+/.history
+/.nyc_output
+
+#replicated i18n
+client/groupapp/assets/i18n/*.json
+client/adminapp/assets/i18n/*.json
+client/indivapp/assets/i18n/*.json
+
+#non-reg tests
+tests/01_uploads
+tests/00_datas/env.json
+tests/00_datas/api-doc.json
+tests/00_datas/mongo-dumps/
+
+# back-end
+node-scripts/output
+node-scripts/input
+env.json
+report.*.json
+logs/
+mongo-dumps/
+.jarvis
+.c4w1b0t
+
+# documentation source files are hidden from search/folder tree by settings in vscode
+# please open documentation folder INTO vscode
+# only those two are not synced with git repo
+doc/doc-src/api-doc-from-tests.js
+doc/doc-src/api-doc-from-app.js
+lib/three.js-master
