@@ -26,7 +26,7 @@ export const STATE = {
   modelConfig: {
     maxPoses: 1,
     type: 'full',
-    scoreThreshold: 0.5
+    scoreThreshold: 0.80
   }
 };
 export const TUNABLE_FLAG_VALUE_RANGE_MAP = {
