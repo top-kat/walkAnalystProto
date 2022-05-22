@@ -19,7 +19,7 @@ var __spread = (this && this.__spread) || function () {
     for (var ar = [], i = 0; i < arguments.length; i++) ar = ar.concat(__read(arguments[i]));
     return ar;
 };
-var __values = (this && this.__values) || function(o) {
+var __values = (this && this.__values) || function (o) {
     var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
     if (m) return m.call(o);
     if (o && typeof o.length === "number") return {
@@ -261,10 +261,12 @@ var ScatterGL = (function () {
         var zRange = getRange(zExtent);
         var maxRange = Math.max(xRange, yRange, zRange);
         var halfCube = constants_1.SCATTER_PLOT_CUBE_LENGTH / 2;
-        var makeScaleRange = function (range, base) { return [
-            -base * (range / maxRange),
-            base * (range / maxRange),
-        ]; };
+        var makeScaleRange = function (range, base) {
+            return [
+                -base * (range / maxRange),
+                base * (range / maxRange),
+            ];
+        };
         var xScale = makeScaleRange(xRange, halfCube);
         var yScale = makeScaleRange(yRange, halfCube);
         var zScale = makeScaleRange(zRange, halfCube);

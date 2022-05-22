@@ -33,7 +33,6 @@ import { setBackendAndEnvFlags } from './util';
 let detector, camera, stats;
 let startInferenceTime, numInferences = 0;
 let inferenceTimeSum = 0, lastPanelUpdate = 0;
-const statusElement = document.getElementById('status');
 
 async function createDetector() {
   const runtime = STATE.backend.split('-')[0];
@@ -60,35 +59,35 @@ async function createDetector() {
 //   }
 // }
 
-function beginEstimatePosesStats() {
-  startInferenceTime = (performance || Date).now();
-}
+// function beginEstimatePosesStats() {
+//   startInferenceTime = (performance || Date).now();
+// }
 
-function endEstimatePosesStats() {
-  const endInferenceTime = (performance || Date).now();
-  inferenceTimeSum += endInferenceTime - startInferenceTime;
-  ++numInferences;
+// function endEstimatePosesStats() {
+//   const endInferenceTime = (performance || Date).now();
+//   inferenceTimeSum += endInferenceTime - startInferenceTime;
+//   ++numInferences;
 
-  const panelUpdateMilliseconds = 1000;
-  if (endInferenceTime - lastPanelUpdate >= panelUpdateMilliseconds) {
-    const averageInferenceTime = inferenceTimeSum / numInferences;
-    inferenceTimeSum = 0;
-    numInferences = 0;
-    stats.customFpsPanel.update(
-      1000.0 / averageInferenceTime, 120 /* maxValue */);
-    lastPanelUpdate = endInferenceTime;
-  }
-}
+//   const panelUpdateMilliseconds = 1000;
+//   if (endInferenceTime - lastPanelUpdate >= panelUpdateMilliseconds) {
+//     const averageInferenceTime = inferenceTimeSum / numInferences;
+//     inferenceTimeSum = 0;
+//     numInferences = 0;
+//     stats.customFpsPanel.update(
+//       1000.0 / averageInferenceTime, 120 /* maxValue */);
+//     lastPanelUpdate = endInferenceTime;
+//   }
+// }
 
 async function renderResult() {
   // FPS only counts the time it takes to finish estimatePoses.
-  beginEstimatePosesStats();
+  // beginEstimatePosesStats();
 
   const poses = await detector.estimatePoses(
     camera.video,
     { maxPoses: STATE.modelConfig.maxPoses, flipHorizontal: false });
 
-  endEstimatePosesStats();
+  // endEstimatePosesStats();
 
   // The null check makes sure the UI is not in the middle of changing to a
   // different model. If during model change, the result is from an old
@@ -120,14 +119,12 @@ async function updateVideo(event) {
   // Must set below two lines, otherwise video element doesn't show.
   camera.video.width = videoWidth;
   camera.video.height = videoHeight;
-  camera.canvas.width = videoWidth;
-  camera.canvas.height = videoHeight;
+  camera.canvas.width = videoHeight * 0.3;
+  camera.canvas.height = videoHeight * 0.8;
 
-  statusElement.innerHTML = 'Video is loaded.';
 }
 
 async function run() {
-  statusElement.innerHTML = 'Warming up model.';
 
   // Warming up pipeline.
   const [runtime, $backend] = STATE.backend.split('-');
@@ -140,7 +137,6 @@ async function run() {
       { maxPoses: STATE.modelConfig.maxPoses, flipHorizontal: false }
     );
     warmUpTensor.dispose();
-    statusElement.innerHTML = 'Model is warmed up.';
   }
 
   // camera.video.style.visibility = 'hidden';
@@ -163,7 +159,7 @@ const videoElm = document.getElementById('video')
 let paused = true
 async function app() {
   console.log('APP  ')
-  stats = setupStats();
+  // stats = setupStats();
   console.log(STATE.model)
   detector = await createDetector(STATE.model)
   console.log(detector)
@@ -171,14 +167,12 @@ async function app() {
 
   await setBackendAndEnvFlags(STATE.flags, STATE.backend)
 
-  const runButton = document.getElementById('submit')
-  runButton.onclick = run
 
   const updateRenderButton = document.getElementById('updateRender')
   updateRenderButton.onclick = renderResult
 
-  const uploadButton = document.getElementById('videofile')
-  uploadButton.onchange = updateVideo
+  // const uploadButton = document.getElementById('videofile')
+  // uploadButton.onchange = updateVideo
 
   document.getElementById('playPauseRender').onclick = () => paused = !paused
 

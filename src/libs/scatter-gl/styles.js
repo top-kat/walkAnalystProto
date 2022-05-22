@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var makeDefaultStyles = function () {
     var defaultStyles = {
-        backgroundColor: '#ffffff',
+        backgroundColor: '#333333',
         axesVisible: true,
         fog: {
             color: '#ffffff',
@@ -24,7 +24,7 @@ var makeDefaultStyles = function () {
             fontSize: 80,
             scale: 2.2,
             color: 'black',
-            backgroundColor: '#ffffff',
+            backgroundColor: '#000000',
             colorUnselected: '#ffffff',
             colorNoSelection: '#ffffff',
         },

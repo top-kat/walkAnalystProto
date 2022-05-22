@@ -15,9 +15,12 @@
     "@tensorflow/tfjs-backend-webgl": "^3.8.0",
     "@tensorflow/tfjs-converter": "^3.8.0",
     "@tensorflow/tfjs-core": "^3.8.0",
-    "three": "^0.140.2"
+    "jquery": "^3.6.0",
+    "three": "^0.140.2",
+    "topkat-utils": "^1.0.45"
   },
   "scripts": {
+    "start": "cross-env NODE_ENV=development parcel index.html --no-hmr --open",
     "watch": "cross-env NODE_ENV=development parcel index.html --no-hmr --open",
     "build": "cross-env NODE_ENV=production parcel build index.html --public-url ./",
     "lint": "eslint .",
