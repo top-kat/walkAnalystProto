@@ -20,6 +20,7 @@ limitations under the License.
       margin: 0;
       background: #333;
       color: #ccc;
+      padding-bottom: 150px;
     }
 
     #main {
@@ -28,7 +29,7 @@ limitations under the License.
     }
 
     #canvas-wrapper {
-      margin-top: 80px;
+      margin-top: 15px;
       position: relative;
     }
 
@@ -68,6 +69,15 @@ limitations under the License.
       margin-right: 5px;
       border-radius: 50%;
     }
+
+    #test-canvas-wrapper {
+      height: 400px;
+    }
+
+    #render-3d {
+      height: 576px;
+      width: 50vw;
+    }
   </style>
 </head>
 
@@ -82,19 +92,26 @@ limitations under the License.
       </div>
     </div>
     <div class="container">
-      <video id="video" controls loop>
-        <source id="currentVID" src="video/walk.mp4" type="video/mp4">
+      <video id="video" loop preload="auto">
+        <source id="currentVID" src="video/marche-manon.mp4" type="video/mp4">
       </video>
       <div id="dataWrapper"></div>
     </div>
     <div class="container" id="canvas-wrapper">
       <canvas id="output"></canvas>
-
-      <div id="scatter-gl-container"></div>
+      <div id="render-3d"></div>
+    </div>
+    <div class="container" id="test-canvas-wrapper">
+      <canvas id="cnv1"></canvas>
+      <canvas id="cnv2"></canvas>
+      <canvas id="cnv3"></canvas>
+      <canvas id="cnv4"></canvas>
     </div>
   </div>
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stats.js/r16/Stats.min.js"></script>
+
+
 <script src="src/index.js"></script>
 
 </html>

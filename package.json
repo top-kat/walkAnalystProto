@@ -15,7 +15,9 @@
     "@tensorflow/tfjs-backend-webgl": "^3.8.0",
     "@tensorflow/tfjs-converter": "^3.8.0",
     "@tensorflow/tfjs-core": "^3.8.0",
+    "dat.gui": "^0.7.9",
     "jquery": "^3.6.0",
+    "jsfeat": "^0.0.8",
     "three": "^0.140.2",
     "topkat-utils": "^1.0.45"
   },

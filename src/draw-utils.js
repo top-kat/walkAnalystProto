@@ -1,12 +1,51 @@
 
-export function setPixelForCoord(ctx, x, y, pixel, offset) {
+import { config } from './00_config.js'
+
+
+/**
+ * @returns 1 => very different ; 0 => exacltly similar
+ */
+export function getPixelsDifference(color1, color2) {
+    const [r1, g1, b1] = color1
+    const [h1, s1, l1] = rgbToHsl(r1, g1, b1)
+    const [r2, g2, b2] = color2 // getPixelAtCoord(ctx, x2, y2)
+    const [h2, s2, l2] = rgbToHsl(r2, g2, b2)
+
+    const similarity = ((
+        Math.abs(h1 - h2) * config.hueInfluence +
+        Math.abs(s1 - s2) * config.saturationInfluence +
+        Math.abs(l1 - l2) * config.luminosityInfluence
+    ) / (
+            config.hueInfluence +
+            config.saturationInfluence +
+            config.luminosityInfluence
+        ))
+    // const similarity = Math.max(Math.abs(h1 - h2), Math.abs(s1 - s2), Math.abs(l1 - l2))
+
+    // maxDif = Math.max(maxDif, similarity)
+    // minDiff = Math.min(minDiff, similarity)
+    return similarity
+}
+
+
+export function setPixelForCoord(ctx, x, y, pixel) {
+    const offset = config.offset
     const [r, g, b, a = 1] = pixel;
     ctx.fillStyle = `rgba(${r},${g},${b},${a})`;
     ctx.fillRect(x - offset.x, y - offset.y, 1, 1);
 }
 
-export function getPixelAtCoord(ctx, x, y, offset) {
+export function getPixelAtCoord(ctx, x, y) {
+    const offset = config.offset
     return ctx.getImageData(x - offset.x, y - offset.y, 1, 1).data
+}
+
+export function forEachPixOfSquare(ctx, callback, xStart = config.offset.x, yStart = config.offset.y, xEnd = config.offset.x + config.offset.w, yEnd = config.offset.y + config.offset.h) {
+    for (let Y = yStart; Y <= yEnd; Y++) {
+        for (let X = xStart; X <= xEnd; X++) {
+            callback(X, Y, getPixelAtCoord(ctx, X, Y, config.offset))
+        }
+    }
 }
 
 export function hslToRgb(h, s, l = 0.5) {
@@ -67,4 +106,13 @@ export function rgbToHsl(r, g, b) {
     }
 
     return [h, s, l];
+}
+
+
+export function distance(x1, y1, x2, y2) {
+    return Math.hypot(x1 - x2, y1 - y2);
+}
+
+export function isBlack([r, g, b]) {
+    return r === 0 && g === 0 && b === 0
 }
