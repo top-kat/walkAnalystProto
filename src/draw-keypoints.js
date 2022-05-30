@@ -26,19 +26,21 @@ export function drawSkeleton(keypoints, ctx) {
     posedetection.util.getAdjacentPairs(config.model).forEach(([
         i, j
     ]) => {
-        const kp1 = keypoints[i];
-        const kp2 = keypoints[j];
+        if (config.ignorePointsIndex.includes(i) || config.ignorePointsIndex.includes(j)) return
+
+        const kp1 = keypoints[i]
+        const kp2 = keypoints[j]
 
         // If score is null, just show the keypoint.
-        const score1 = kp1.score != null ? kp1.score : 1;
-        const score2 = kp2.score != null ? kp2.score : 1;
-        const scoreThreshold = config.pointConfidenceScoreMin || 0;
+        const score1 = kp1.score != null ? kp1.score : 1
+        const score2 = kp2.score != null ? kp2.score : 1
+        const scoreThreshold = config.pointConfidenceScoreMin || 0
 
         if (score1 >= scoreThreshold && score2 >= scoreThreshold) {
-            ctx.beginPath();
-            ctx.moveTo(kp1.x - config.offset.x, kp1.y - config.offset.y);
-            ctx.lineTo(kp2.x - config.offset.x, kp2.y - config.offset.y);
-            ctx.stroke();
+            ctx.beginPath()
+            ctx.moveTo(kp1.x - config.offset.x, kp1.y - config.offset.y)
+            ctx.lineTo(kp2.x - config.offset.x, kp2.y - config.offset.y)
+            ctx.stroke()
         }
     });
 }

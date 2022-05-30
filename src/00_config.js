@@ -47,4 +47,10 @@ export const config = {
   saturationInfluence: 0,
   luminosityInfluence: 1,
   takeRelativePixelForZoneDetection: true,
+  // 3D RENDER
+  rotateX: 0,
+  rotateY: 0,
+  rotateZ: 0,
+  // MISC
+  st: { groundYavg: 999 },
 };

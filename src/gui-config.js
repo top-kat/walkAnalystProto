@@ -28,9 +28,16 @@ export default function setupGui(renderFn) {
     colorSegmentationFolder.add(config, 'saturationInfluence', 0, 1).step(0.1).onChange(renderFn)
     colorSegmentationFolder.add(config, 'luminosityInfluence', 0, 1).step(0.1).onChange(renderFn)
 
+    // 3D RENDER
+    const render3Dfolder = gui.addFolder('render 3D')
+    render3Dfolder.add(config, 'rotateX', 0, 6.28).step(0.1)
+    render3Dfolder.add(config, 'rotateY', 0, 6.28).step(0.1)
+    render3Dfolder.add(config, 'rotateZ', 0, 6.28).step(0.1)
+
 
 
     edgeDetectionFolder.open()
     poseDetectionConfigFolder.open()
     colorSegmentationFolder.open()
+    render3Dfolder.open()
 }

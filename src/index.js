@@ -12,7 +12,6 @@ import * as tf from '@tensorflow/tfjs-core';
 import { config } from './00_config.js';
 import { setBackendAndEnvFlags } from './util'
 import { drawResult } from './draw'
-import { drawKeypoints3D } from './draw-keypoints-3d.js'
 import setupGui from './gui-config.js'
 
 const dom = config.dom = {
@@ -61,9 +60,8 @@ async function updateVideo() {
 
 }
 
-let paused = true
+let paused = false
 async function app() {
-  console.log('APP  ')
 
   setupGui(renderResultsWithTimeout)
 
@@ -91,25 +89,28 @@ async function app() {
 
   document.getElementById('playPauseRender').onclick = () => paused = !paused
 
-  dom.video.onseeked = renderResult
+  // dom.video.onseeked = renderResult
+
+  dom.video.oncanplaythrough = () => console.log('CANPLAY')
+
+  dom.video.oncanplaythrough = () => console.log('CANPLAY2')
 
   setTimeout(async () => {
-    await renderResult()
+    // await renderResult()
     renderOnPlay()
   }, 1500);
 };
 
 async function renderOnPlay() {
-  if (!paused) {
-    // dom.video.currentTime += 0.04
-    // if (dom.video.currentTime > dom.video.duration) dom.video.currentTime = 0
-    // setTimeout(async () => await renderResult(), 1000) // TODO find a way to know element has loaded
-
-    drawKeypoints3D()
+  if (paused) setTimeout(() => requestAnimationFrame(renderOnPlay), 1000)
+  else {
+    dom.video.currentTime += 0.04
+    if (dom.video.currentTime > dom.video.duration) dom.video.currentTime = 0
+    dom.video.oncanplaythrough = async () => {
+      await renderResult()
+      setTimeout(() => requestAnimationFrame(renderOnPlay), 1000)
+    }
   }
-  setTimeout(() => {
-    requestAnimationFrame(renderOnPlay)
-  }, 5000)
 }
 
 app();

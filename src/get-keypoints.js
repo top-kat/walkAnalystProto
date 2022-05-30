@@ -14,8 +14,8 @@ export function getKeyPoints(keypoints) {
         earLeft,
         mouthRight,
         mouthLeft,
-        shoulderRight,
-        shoulderLeft,
+        shoulderRight, // 11
+        shoulderLeft, // 12
         elbowRight, // 13
         elbowLeft, // 14
         wristRight, // 15
@@ -27,15 +27,15 @@ export function getKeyPoints(keypoints) {
         thumbKnuckleRight, // 21
         thumbKnuckleLeft, // 22
         hipRight, // hanche
-        hipLeft,
+        hipLeft, // 24
         kneeRight,
-        kneeLeft,
+        kneeLeft, // 26
         ankleRight, // cheville
-        ankleLeft,
+        ankleLeft, // 28
         heelRight, // talon
-        heelLeft,
+        heelLeft, // 30
         footIndexRight, // pointe de pied
-        footIndexLeft,
+        footIndexLeft, // 32
     ] = keypoints
     return { nose, eyeRightInner, eyeRight, eyeRightOuter, eyeLeftInner, eyeLeft, eyeLeftOuter, earRight, earLeft, mouthRight, mouthLeft, shoulderRight, shoulderLeft, elbowRight, elbowLeft, wristRight, wristLeft, pinkyKnuckleRight, pinkyKnuckleLeft, indexKnuckleRight, indexKnuckleLeft, thumbKnuckleRight, thumbKnuckleLeft, hipRight, hipLeft, kneeRight, kneeLeft, ankleRight, ankleLeft, heelRight, heelLeft, footIndexRight, footIndexLeft }
 }

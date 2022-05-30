@@ -44,15 +44,13 @@ export function drawResult(pose, ctx, video) {
 
         ctx.drawImage(video, config.offset.x, config.offset.y, config.offset.w, config.offset.h, 0, 0, config.offset.w, config.offset.h)
 
-        drawKeypoints(keypoints, ctx);
-        drawSkeleton(keypoints, ctx);
-        drawKeypoints3D(keypoints3D);
+        draw(keypoints, keypoints3D, ctx);
     }
 }
 
 let footAvgArea = []
 
-function drawKeypoints(keypoints, ctx) {
+function draw(keypoints, keypoints3D, ctx) {
 
     if (config.displayHslValues) drawHslValues()
 
@@ -70,16 +68,16 @@ function drawKeypoints(keypoints, ctx) {
         footIndexLeft,
     } = namedKeypoints
 
-    const st = {}
+    config.st = {}
 
     // TODO take in account confidence score
-    const walkDirection = st.walkDirection = footIndexRight.x > heelRight.x ? 'leftToRight' : 'rightToLeft'
+    const walkDirection = config.st.walkDirection = footIndexRight.x > heelRight.x ? 'leftToRight' : 'rightToLeft'
 
     const moyRightFoot = { x: moyenne([footIndexRight.x, heelRight.x, ankleRight.x]), y: moyenne([footIndexRight.y, heelRight.y, ankleRight.y]) }
     const moyLeftFoot = { x: moyenne([footIndexLeft.x, heelLeft.x, ankleLeft.x]), y: moyenne([footIndexLeft.y, heelLeft.y, ankleLeft.y]) }
 
-    const rightFootPosition = st.rightFootPosition = moyRightFoot.x > moyLeftFoot.x ? 'right' : 'left'
-    const frontFoot = st.frontFoot = rightFootPosition === 'right' ? (walkDirection === 'leftToRight' ? 'right' : 'left') : (walkDirection === 'leftToRight' ? 'left' : 'right')
+    const rightFootPosition = config.st.rightFootPosition = moyRightFoot.x > moyLeftFoot.x ? 'right' : 'left'
+    const frontFoot = config.st.frontFoot = rightFootPosition === 'right' ? (walkDirection === 'leftToRight' ? 'right' : 'left') : (walkDirection === 'leftToRight' ? 'left' : 'right')
 
 
 
@@ -94,9 +92,9 @@ function drawKeypoints(keypoints, ctx) {
 
         const leftMostFootItem = walkDirection === 'rightToLeft' ? namedKeypoints[`footIndex${lOrR}`].x : Math.min(namedKeypoints[`heel${lOrR}`].x, namedKeypoints[`ankle${lOrR}`].x)
         const rightMostFootItem = walkDirection === 'rightToLeft' ? Math.max(namedKeypoints[`heel${lOrR}`].x, namedKeypoints[`ankle${lOrR}`].x) : footIndexRight.x
-        st.shoeColor = ''
+        config.st.shoeColor = ''
         const shoePixObject = findShoeColorZone(
-            ctx, st,
+            ctx,
             isLeft ? moyLeftFoot.x : moyRightFoot.x,
             isLeft ? moyLeftFoot.y : moyRightFoot.y,
             talonChevilleDistMoy / 2,
@@ -121,9 +119,9 @@ function drawKeypoints(keypoints, ctx) {
         if (footAvgArea.length) {
             const avgFootArea = moyenne(footAvgArea)
 
-            st[`avg${lOrR}FootArea`] = avgFootArea
+            config.st[`avg${lOrR}FootArea`] = avgFootArea
 
-            st[`foot${lOrR}DetectionConfidence`] = round2((1 / avgFootArea) * footArea)
+            config.st[`foot${lOrR}DetectionConfidence`] = round2((1 / avgFootArea) * footArea)
 
             if (footAvgArea.length > 10) footAvgArea.shift()
         }
@@ -140,13 +138,17 @@ function drawKeypoints(keypoints, ctx) {
     for (const i of keypointInd.left) if (!config.ignorePointsIndex.includes(i)) drawKeypoint(ctx, keypoints[i], 'Green')
     for (const i of keypointInd.right) if (!config.ignorePointsIndex.includes(i)) drawKeypoint(ctx, keypoints[i], 'Orange')
 
+
+    drawSkeleton(keypoints, ctx);
+
+    drawKeypoints3D(keypoints3D);
+
     $('#dataTable').remove()
-    $('#dataWrapper').append(`<table id='dataTable'>${Object.entries(st).map(([name, val]) => `<tr><td>${name}</td><td>${val}</td></tr>`).join('')}</table>`)
+    $('#dataWrapper').append(`<table id='dataTable'>${Object.entries(config.st).map(([name, val]) => `<tr><td>${name}</td><td>${val}</td></tr>`).join('')}</table>`)
 }
 
 
-
-function findShoeColorZone(ctx, st, x, y, size, minShoeY, maxShoeX, minShoeX) {
+function findShoeColorZone(ctx, x, y, size, minShoeY, maxShoeX, minShoeX) {
 
     x = Math.round(x)
     y = Math.round(y)
@@ -170,7 +172,7 @@ function findShoeColorZone(ctx, st, x, y, size, minShoeY, maxShoeX, minShoeX) {
     // SHOE COLOR
     const shoeAvgPix = [[x, y], ...getAdjacentPixels(x, y)].map(pix => getPixelAtCoord(ctx, pix[0], pix[1], config.offset))
     const shoeColor = [moyenne(shoeAvgPix.map(c => c[0])), moyenne(shoeAvgPix.map(c => c[1])), moyenne(shoeAvgPix.map(c => c[2]))]
-    st.shoeColor += `<span class='colorSwatch' style='background-color:rgb(${shoeColor.join(',')})'></span>`
+    config.st.shoeColor += `<span class='colorSwatch' style='background-color:rgb(${shoeColor.join(',')})'></span>`
 
     // FIND GROUND COLOR by analysing the base pixel line
     const groundColors = [] // :[[r,g,b], nbOccurence, diffWithShoeColor]
@@ -183,7 +185,7 @@ function findShoeColorZone(ctx, st, x, y, size, minShoeY, maxShoeX, minShoeX) {
         } else similarColorObj[1]++
     }, undefined, maxY)
 
-    st.groundColors = groundColors.map(([clr]) => `<span class='colorSwatch' style='background-color:rgb(${clr.join(',')})'></span>`).join('')
+    config.st.groundColors = groundColors.map(([clr]) => `<span class='colorSwatch' style='background-color:rgb(${clr.join(',')})'></span>`).join('')
 
     // MARK GROUND PIXELS
     const groundPixels = {} // { 'X-Y': [x, y]}
@@ -199,7 +201,7 @@ function findShoeColorZone(ctx, st, x, y, size, minShoeY, maxShoeX, minShoeX) {
             })
         }
     }
-    confidenceScore.floorDetection = st.floorDetectionConfidence = Math.min(1, (1 / 0.3) * moyenne(colorDifferencesWithShoe))
+    confidenceScore.floorDetection = config.st.floorDetectionConfidence = Math.min(1, (1 / 0.3) * moyenne(colorDifferencesWithShoe))
 
     // MARK DIFFERENTS PIXELS ON IMAGE
     const differentPixels = {}
@@ -231,13 +233,13 @@ function drawPixelCluster(ctx, pixels, color) {
 
 
 
-
 function getColorZoneAroundPoint(ctx, x, y, maxDim, baseColor, ignorePixs = []) {
     const pixCache = {}
     const notProcessed = [[x, y]]
     pixCache[x + '-' + y] = [x, y, 0]
     const { minX, maxX, minY, maxY } = maxDim
     const output = { area: 0, minX: 9999, maxX: 0, minY: 9999, maxY: 0, nbPixOutOfZone: 0 }
+    let i = 0
     while (notProcessed.length && Object.keys(pixCache).length < maxShoeDetectionArea) {
         let [actualX, actualY] = notProcessed.shift().map(i => Math.round(i))
 
@@ -252,6 +254,7 @@ function getColorZoneAroundPoint(ctx, x, y, maxDim, baseColor, ignorePixs = []) 
             const similarAdjacent = getAdjacentSimilarPix(ctx, actualX, actualY, pixCache, colorToCompareWith, ignorePixs)
             notProcessed.push(...similarAdjacent)
         } else output.nbPixOutOfZone++
+        if (i > 9999) throw new Error('Max Iter for getColorZoneAroundPoint while')
     }
 
     output.data = Object.values(pixCache)
@@ -281,8 +284,6 @@ function getAdjacentSimilarPix(ctx, x, y, pixObj, baseColor, ignorePixs) {
 function getAdjacentPixels(x, y) {
     return [[x - 1, y - 1], [x, y - 1], [x + 1, y - 1], [x - 1, y], [x + 1, y], [x - 1, y + 1], [x, y + 1], [x + 1, y + 1]]
 }
-
-
 
 
 function drawHslValues() {
