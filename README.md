@@ -1,3 +1,10 @@
+# Install
+
+* Install nodeJs
+* Run command `npm i` in the repo folder
+* then `npm run start` to start the project
+
+
 # TODOs améliorations
 
 
