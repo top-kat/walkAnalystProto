@@ -1,4 +1,4 @@
-# améliorations
+# TODOs améliorations
 
 
 * normalisation de la vue
@@ -12,7 +12,7 @@
 * réduction du bruit en interpolant et en éliminant les données aberrantes
   * interpolation temporelle des mouvements
   * interpoler les aires (détection des pieds) expected area
-* calcul des scores de confiances afin que l'IA puisse s'auto jauger
+* calcul des scores de confiances pour chaques algo
 * autres
   * la segmentation colorimétrique peut être grandement améliorée en y ajoutant des données temporelles (ex couleur des chaussures, couleur du sol)
 
