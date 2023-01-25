@@ -6,7 +6,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { moyenne } from 'topkat-utils';
 
 const canvas3delm = document.getElementById('render-3d')
-const isOrthoCam = true
+const isOrthoCam = false
 
 const aspect = canvas3delm.clientWidth / canvas3delm.clientHeight
 const frustumSize = 2
@@ -34,11 +34,13 @@ scene.add(bodyGroup)
 const axesHelper = new THREE.AxesHelper(0.1);
 scene.add(axesHelper);
 
-const geometry = new THREE.BoxGeometry(10, 0.1, 1);
-const material = new THREE.MeshBasicMaterial({ color: 0x009900 });
-const ground = new THREE.Mesh(geometry, material);
-ground.position.z -= 10
-scene.add(ground);
+// const geometry = new THREE.BoxGeometry(100, 0.01, 100);
+const geometry = new THREE.GridHelper(100, 100, 0x002233, 0x002233);
+// const material = new THREE.MeshBasicMaterial({ color: 0x003300 });
+// const ground = new THREE.Mesh(geometry, material);
+// ground.position.z -= 10
+geometry.position.z -= 10
+scene.add(geometry);
 
 const sprites = []
 const lines = []
@@ -87,7 +89,7 @@ export function drawKeypoints3D(keypoints = []) {
                 const maxVal2 = minValue + (maxVal - minValue) * 0.1
                 const filtered = groundY.filter(y => y < maxVal2)
                 config.st.groundYavg = moyenne(filtered)
-                ground.position.y = config.st.groundYavg - 0.05
+                geometry.position.y = config.st.groundYavg - 0.05
             }
         }
 

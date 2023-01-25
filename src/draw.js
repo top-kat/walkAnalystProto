@@ -12,6 +12,7 @@ import { moyenne, isset, round2 } from 'topkat-utils'
 
 const maxShoeDetectionArea = 2500 // TODO make this relative
 
+let keyPoints3dGlob = []
 
 export function drawResult(pose, ctx, video) {
 
@@ -141,12 +142,19 @@ function draw(keypoints, keypoints3D, ctx) {
 
     drawSkeleton(keypoints, ctx);
 
-    drawKeypoints3D(keypoints3D);
+    keyPoints3dGlob = keypoints3D
 
     $('#dataTable').remove()
     $('#dataWrapper').append(`<table id='dataTable'>${Object.entries(config.st).map(([name, val]) => `<tr><td>${name}</td><td>${val}</td></tr>`).join('')}</table>`)
 }
 
+function update3dView() {
+    window.requestAnimationFrame(() => {
+        drawKeypoints3D(keyPoints3dGlob)
+        update3dView()
+    })
+}
+update3dView()
 
 function findShoeColorZone(ctx, x, y, size, minShoeY, maxShoeX, minShoeX) {
 
