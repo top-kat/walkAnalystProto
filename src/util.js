@@ -65,8 +65,7 @@ export async function setBackendAndEnvFlags(flagConfig, backend) {
   if (flagConfig == null) {
     return;
   } else if (typeof flagConfig !== 'object') {
-    throw new Error(
-      `An object is expected, while a(n) ${typeof flagConfig} is found.`);
+    throw new Error(`An object is expected, while a(n) ${typeof flagConfig} is found.`);
   }
 
   // Check the validation of flags and values.
